@@ -1,10 +1,11 @@
 package org.example
+import java.io.File
 import java.util.Scanner
 
 fun main(args: Array<String>) {
     when (args.size) {
         0 -> interactiveMode()
-        1 -> nonInteractiveMode()
+        1 -> nonInteractiveMode(args)
         else -> throw IllegalArgumentException()
     }
 }
@@ -54,6 +55,13 @@ private fun printRoots(roots: Pair<Double, Double>) {
     }
 }
 
-fun nonInteractiveMode() {
-
+fun nonInteractiveMode(args: Array<String>) {
+    val text = File(args.first()).readText()
+    val (a, b, c) = text.split(" ")
+                        .map { it.toDouble() }
+                        .toList()
+    printEquation(a, b, c)
+    val solution = solveQuadraticEquation(a, b, c)
+    printSolutionInfo(solution)
+    printRoots(solution)
 }
