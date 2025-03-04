@@ -8,14 +8,6 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
         solveQuadraticEquation(a, b, c).sorted()
     }
 
-    fun formatInfo(): String {
-        return buildString {
-            appendLine(toString())
-            appendLine(formatRootsCount())
-            appendLine(formatRoots())
-        }
-    }
-
     override fun toString(): String {
         // TODO: normalize equation
         return "Equation is: (${a}) x^2 + (${b}) x + (${c}) = 0"
@@ -25,23 +17,6 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
     fun hasFirstRoot() = roots.first.isFinite()
     fun hasOnlyOneRoot() = roots.first.isFinite() && roots.second.isNaN()
     fun hasTwoRoots() = roots.first.isFinite() && roots.second.isFinite()
-
-    fun formatRoots(): String {
-        val (x1, x2) = roots
-        return buildString {
-            if (hasFirstRoot()) appendLine("x1 = $x1")
-            if (hasTwoRoots()) appendLine("x2 = $x2")
-        }
-    }
-
-    fun formatRootsCount(): String {
-        return when {
-            hasNoRoots() -> "There are 0 roots"
-            hasOnlyOneRoot() -> "There is 1 root"
-            hasTwoRoots() -> "There are 2 roots"
-            else -> ""
-        }
-    }
 
     private fun Pair<Double, Double>.sorted() = if (first <= second) this else second to first
 
@@ -57,6 +32,35 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
 
         private fun calculateX1(a: Double, b: Double, D: Double) = (-b + sqrt(D))/(2 * a)
         private fun calculateX2(a: Double, b: Double, D: Double) = (-b - sqrt(D))/(2 * a)
+    }
+
+
+}
+
+object QuadraticEquationFormatter {
+    fun formatInfo(equation: QuadraticEquation): String {
+        return buildString {
+            appendLine(equation)
+            appendLine(formatRootsCount(equation))
+            appendLine(formatRoots(equation))
+        }
+    }
+
+    fun formatRoots(equation: QuadraticEquation): String {
+        val (x1, x2) = equation.roots
+        return buildString {
+            if (equation.hasFirstRoot()) appendLine("x1 = $x1")
+            if (equation.hasTwoRoots()) appendLine("x2 = $x2")
+        }
+    }
+
+    fun formatRootsCount(equation: QuadraticEquation): String {
+        return when {
+            equation.hasNoRoots() -> "There are 0 roots"
+            equation.hasOnlyOneRoot() -> "There is 1 root"
+            equation.hasTwoRoots() -> "There are 2 roots"
+            else -> ""
+        }
     }
 
 

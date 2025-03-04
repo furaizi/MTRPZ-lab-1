@@ -5,7 +5,7 @@ import java.io.File
 fun interactiveMode() {
     val (a, b, c) = readCoefficients()
     val equation = QuadraticEquation(a, b, c)
-    println(equation.formatInfo())
+    println(QuadraticEquationFormatter.formatInfo(equation))
 }
 
 fun nonInteractiveMode(args: Array<String>) {
@@ -14,7 +14,7 @@ fun nonInteractiveMode(args: Array<String>) {
         .map { it.toDouble() }
         .toList()
     val equation = QuadraticEquation(a, b, c)
-    println(equation.formatInfo())
+    println(QuadraticEquationFormatter.formatInfo(equation))
 }
 
 private fun readCoefficients(): Triple<Double, Double, Double> {
