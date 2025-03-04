@@ -1,7 +1,6 @@
 import org.example.FileDoesNotExistException
 import org.example.InvalidFileFormatException
 import org.example.NotQuadraticEquationException
-import org.example.interactiveMode
 import org.example.nonInteractiveMode
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -13,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
-class NonInteractiveMode {
+class NonInteractiveModeTest {
 
     private val DEFAULT_PATH = "src/test/resources/test.txt"
     private val standardOut = System.out
@@ -61,9 +60,7 @@ class NonInteractiveMode {
 
     @Test
     fun `file does not exists`() {
-        val input = "2 5 -10"
         val nonExistentPath = "src/test/resources/doesnotexist.txt"
-        File(nonExistentPath).writeText(input)
 
         val exception = assertThrows<FileDoesNotExistException> { nonInteractiveMode(arrayOf(nonExistentPath)) }
         assertEquals("File $nonExistentPath does not exist", exception.message)
