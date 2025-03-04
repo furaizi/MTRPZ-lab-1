@@ -17,7 +17,7 @@ class InteractiveModeTest {
     private val testOut = ByteArrayOutputStream()
 
     @BeforeEach
-    fun setup() {
+    fun setUp() {
         System.setOut(PrintStream(testOut))
     }
 
@@ -28,6 +28,13 @@ class InteractiveModeTest {
         testOut.reset()
     }
 
+    private fun runInteractiveMode(input: String): String {
+        provideInput(input)
+        interactiveMode()
+        return testOut.toString()
+    }
+    private fun provideInput(input: String) = System.setIn(ByteArrayInputStream(input.toByteArray()))
+
 
     @Test
     fun `valid input with two roots`() {
@@ -37,10 +44,8 @@ class InteractiveModeTest {
             3
             1
         """.trimIndent()
-        provideInput(input)
 
-        interactiveMode()
-        val output = testOut.toString()
+        val output = runInteractiveMode(input)
         assertContains(output, "Equation is: (2.0) x^2 + (3.0) x + (1.0) = 0")
         assertContains(output, "There are 2 roots")
         assertContains(output, "x1 = -1.0")
@@ -56,10 +61,8 @@ class InteractiveModeTest {
             -10
             25
         """.trimIndent()
-        provideInput(input)
 
-        interactiveMode()
-        val output = testOut.toString()
+        val output = runInteractiveMode(input)
         assertContains(output, "Error. Expected a valid real number, got abc instead")
         assertContains(output, "Equation is: (1.0) x^2 + (-10.0) x + (25.0) = 0")
         assertContains(output, "There is 1 root")
@@ -78,6 +81,4 @@ class InteractiveModeTest {
         val exception = assertThrows<NotQuadraticEquationException> { interactiveMode() }
         assertEquals("Error. 'a' cannot be 0", exception.message)
     }
-
-    private fun provideInput(input: String) = System.setIn(ByteArrayInputStream(input.toByteArray()))
 }

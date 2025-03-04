@@ -14,55 +14,60 @@ import kotlin.test.assertEquals
 
 class NonInteractiveModeTest {
 
-    private val DEFAULT_PATH = "src/test/resources/test.txt"
-    private val standardOut = System.out
-    private val testOut = ByteArrayOutputStream()
+    private companion object {
+        const val DEFAULT_PATH = "src/test/resources/test.txt"
+    }
+    private val originalOut = System.out
+    private val outputStream = ByteArrayOutputStream()
 
     @BeforeEach
-    fun prepare() {
-        System.setOut(PrintStream(testOut))
+    fun setUp() {
+        System.setOut(PrintStream(outputStream))
     }
 
     @AfterEach
     fun tearDown() {
-        System.setOut(standardOut)
-        testOut.reset()
+        System.setOut(originalOut)
+        outputStream.reset()
+    }
+
+    private fun runNonInteractiveMode(fileContent: String, path: String = DEFAULT_PATH): String {
+        File(path).writeText(fileContent)
+        nonInteractiveMode(arrayOf(path))
+        return outputStream.toString()
     }
 
     @Test
     fun `valid input with 0 roots`() {
-        val input = "1 0 9\n"
-        File(DEFAULT_PATH).writeText(input)
-
-        nonInteractiveMode(arrayOf(DEFAULT_PATH))
-        val output = testOut.toString()
+        val output = runNonInteractiveMode("1 0 9")
         assertContains(output, "Equation is: (1.0) x^2 + (0.0) x + (9.0) = 0")
         assertContains(output, "There are 0 roots")
     }
 
     @Test
     fun `non quadratic equation`() {
-        val input = "0 1 -7"
-        File(DEFAULT_PATH).writeText(input)
-
-        val exception = assertThrows<NotQuadraticEquationException> { nonInteractiveMode(arrayOf(DEFAULT_PATH)) }
+        File(DEFAULT_PATH).writeText("0 1 -7")
+        val exception = assertThrows<NotQuadraticEquationException> {
+            nonInteractiveMode(arrayOf(DEFAULT_PATH))
+        }
         assertEquals("Error. 'a' cannot be 0", exception.message)
     }
 
     @Test
     fun `invalid file format`() {
-        val input = "a b c"
-        File(DEFAULT_PATH).writeText(input)
-
-        val exception = assertThrows<InvalidFileFormatException> { nonInteractiveMode(arrayOf(DEFAULT_PATH)) }
+        File(DEFAULT_PATH).writeText("a b c")
+        val exception = assertThrows<InvalidFileFormatException> {
+            nonInteractiveMode(arrayOf(DEFAULT_PATH))
+        }
         assertEquals("Invalid file format", exception.message)
     }
 
     @Test
     fun `file does not exists`() {
         val nonExistentPath = "src/test/resources/doesnotexist.txt"
-
-        val exception = assertThrows<FileDoesNotExistException> { nonInteractiveMode(arrayOf(nonExistentPath)) }
+        val exception = assertThrows<FileDoesNotExistException> {
+            nonInteractiveMode(arrayOf(nonExistentPath))
+        }
         assertEquals("File $nonExistentPath does not exist", exception.message)
     }
 
