@@ -1,5 +1,5 @@
 import org.example.NotQuadraticEquationException
-import org.example.interactiveMode
+import org.example.main
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +30,7 @@ class InteractiveModeTest {
 
     private fun runInteractiveMode(input: String): String {
         provideInput(input)
-        interactiveMode()
+        main(arrayOf())
         return testOut.toString()
     }
     private fun provideInput(input: String) = System.setIn(ByteArrayInputStream(input.toByteArray()))
@@ -78,7 +78,7 @@ class InteractiveModeTest {
         """.trimIndent()
         provideInput(input)
 
-        val exception = assertThrows<NotQuadraticEquationException> { interactiveMode() }
+        val exception = assertThrows<NotQuadraticEquationException> { main(arrayOf()) }
         assertEquals("Error. 'a' cannot be 0", exception.message)
     }
 }

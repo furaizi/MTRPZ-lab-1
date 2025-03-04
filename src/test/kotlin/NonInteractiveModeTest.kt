@@ -1,16 +1,11 @@
-import org.example.FileDoesNotExistException
-import org.example.InvalidFileFormatException
-import org.example.NotQuadraticEquationException
-import org.example.nonInteractiveMode
+import org.example.main
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
 import kotlin.test.Test
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 class NonInteractiveModeTest {
 
@@ -33,7 +28,7 @@ class NonInteractiveModeTest {
 
     private fun runNonInteractiveMode(fileContent: String, path: String = DEFAULT_PATH): String {
         File(path).writeText(fileContent)
-        nonInteractiveMode(arrayOf(path))
+        main(arrayOf(path))
         return outputStream.toString()
     }
 
@@ -46,29 +41,23 @@ class NonInteractiveModeTest {
 
     @Test
     fun `non quadratic equation`() {
-        File(DEFAULT_PATH).writeText("0 1 -7")
-        val exception = assertThrows<NotQuadraticEquationException> {
-            nonInteractiveMode(arrayOf(DEFAULT_PATH))
-        }
-        assertEquals("Error. 'a' cannot be 0", exception.message)
+        val output = runNonInteractiveMode("0 1 -7")
+        assertContains(output, "Error. 'a' cannot be 0")
     }
 
     @Test
     fun `invalid file format`() {
-        File(DEFAULT_PATH).writeText("a b c")
-        val exception = assertThrows<InvalidFileFormatException> {
-            nonInteractiveMode(arrayOf(DEFAULT_PATH))
-        }
-        assertEquals("Invalid file format", exception.message)
+        val output = runNonInteractiveMode("a b c")
+        assertContains(output, "Invalid file format")
     }
 
     @Test
     fun `file does not exists`() {
         val nonExistentPath = "src/test/resources/doesnotexist.txt"
-        val exception = assertThrows<FileDoesNotExistException> {
-            nonInteractiveMode(arrayOf(nonExistentPath))
-        }
-        assertEquals("File $nonExistentPath does not exist", exception.message)
+        main(arrayOf(nonExistentPath))
+        val output = outputStream.toString()
+        assertContains(output, "File $nonExistentPath does not exist")
+
     }
 
 }
