@@ -1,29 +1,13 @@
 package org.example
 
-import java.io.File
-
 fun interactiveMode() {
-    val (a, b, c) = readCoefficients()
+    val (a, b, c) = readCoefficientsFromConsole()
     val equation = QuadraticEquation(a, b, c)
     println(QuadraticEquationFormatter.formatInfo(equation))
 }
 
 fun nonInteractiveMode(args: Array<String>) {
-    val text = File(args.first()).readText()
-    val (a, b, c) = text.split(" ")
-        .map { it.toDouble() }
-        .toList()
+    val (a, b, c) = readCoefficientsFromFile(args.first())
     val equation = QuadraticEquation(a, b, c)
     println(QuadraticEquationFormatter.formatInfo(equation))
-}
-
-private fun readCoefficients(): Triple<Double, Double, Double> {
-    print("a = ")
-    val a = readln().toDouble()
-    print("b = ")
-    val b = readln().toDouble()
-    print("c = ")
-    val c = readln().toDouble()
-
-    return Triple(a, b, c)
 }
