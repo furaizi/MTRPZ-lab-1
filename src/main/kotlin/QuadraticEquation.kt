@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 
 class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
     val roots: Pair<Double, Double> by lazy {
-        solveQuadraticEquation(a, b, c).sorted()
+        QuadraticEquationSolver.solve(a, b, c).sorted()
     }
 
     override fun toString(): String {
@@ -18,23 +18,27 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
     fun hasOnlyOneRoot() = roots.first.isFinite() && roots.second.isNaN()
     fun hasTwoRoots() = roots.first.isFinite() && roots.second.isFinite()
 
-    private fun Pair<Double, Double>.sorted() = if (first <= second) this else second to first
-
-    companion object {
-        private fun solveQuadraticEquation(a: Double, b: Double, c: Double) : Pair<Double, Double> {
-            val discriminant = b*b - 4*a*c
-            return when {
-                discriminant > 0 -> calculateX1(a, b, discriminant) to calculateX2(a, b, discriminant)
-                discriminant == 0.0 -> calculateX1(a, b, discriminant) to NaN
-                else -> NaN to NaN
-            }
-        }
-
-        private fun calculateX1(a: Double, b: Double, D: Double) = (-b + sqrt(D))/(2 * a)
-        private fun calculateX2(a: Double, b: Double, D: Double) = (-b - sqrt(D))/(2 * a)
+    private fun Pair<Double, Double>.sorted() = when {
+        // has only one root. Can't reuse eponymous method because "roots" value isn't initialized yet
+        first.isFinite() && second.isNaN() -> this
+        first <= second -> this
+        else -> second to first
     }
 
+}
 
+object QuadraticEquationSolver {
+    fun solve(a: Double, b: Double, c: Double): Pair<Double, Double> {
+        val discriminant = b*b - 4*a*c
+        return when {
+            discriminant < 0 -> NaN to NaN
+            discriminant > 0 -> calculateX1(a, b, discriminant) to calculateX2(a, b, discriminant)
+            else -> calculateX1(a, b, discriminant) to NaN
+        }
+    }
+
+    private fun calculateX1(a: Double, b: Double, D: Double) = (-b + sqrt(D))/(2 * a)
+    private fun calculateX2(a: Double, b: Double, D: Double) = (-b - sqrt(D))/(2 * a)
 }
 
 object QuadraticEquationFormatter {
@@ -62,6 +66,5 @@ object QuadraticEquationFormatter {
             else -> ""
         }
     }
-
 
 }
