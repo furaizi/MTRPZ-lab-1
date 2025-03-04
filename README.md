@@ -57,5 +57,5 @@ cd MTRPZ-lab-1
 
 4. Насолоджуйтесь :)
 
-## Посилання на revert commit
-To be continued
+## [Посилання на revert commit](https://github.com/furaizi/MTRPZ-lab-1/commit/093b9f2a413a6c1c1ffd0b9c208952d209a5cf33)
+
