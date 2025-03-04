@@ -29,6 +29,7 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
 
 object QuadraticEquationSolver {
     fun solve(a: Double, b: Double, c: Double): Pair<Double, Double> {
+        require(a != 0.0) { NotQuadraticEquationException().message!! }
         val discriminant = b*b - 4*a*c
         return when {
             discriminant < 0 -> NaN to NaN
@@ -37,8 +38,8 @@ object QuadraticEquationSolver {
         }
     }
 
-    private fun calculateX1(a: Double, b: Double, D: Double) = (-b + sqrt(D))/(2 * a)
-    private fun calculateX2(a: Double, b: Double, D: Double) = (-b - sqrt(D))/(2 * a)
+    private fun calculateX1(a: Double, b: Double, D: Double) = (-b+sqrt(D)) / (2*a)
+    private fun calculateX2(a: Double, b: Double, D: Double) = (-b-sqrt(D)) / (2*a)
 }
 
 object QuadraticEquationFormatter {
