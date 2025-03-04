@@ -23,7 +23,7 @@ private fun readDouble(name: String): Double {
     print("$name = ")
     val input = readln()
     return input.toDoubleOrNull() ?: run {
-        println("Error. Expected a valid real number, got $name instead")
+        println("Error. Expected a valid real number, got $input instead")
         readDouble(name)
     }
 }

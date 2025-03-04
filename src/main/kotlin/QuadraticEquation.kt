@@ -29,7 +29,7 @@ class QuadraticEquation(val a: Double, val b: Double, val c: Double) {
 
 object QuadraticEquationSolver {
     fun solve(a: Double, b: Double, c: Double): Pair<Double, Double> {
-        require(a != 0.0) { NotQuadraticEquationException().message!! }
+        a.takeIf { it != 0.0 } ?: throw NotQuadraticEquationException()
         val discriminant = b*b - 4*a*c
         return when {
             discriminant < 0 -> NaN to NaN
@@ -48,7 +48,7 @@ object QuadraticEquationFormatter {
             appendLine(equation)
             appendLine(formatRootsCount(equation))
             appendLine(formatRoots(equation))
-        }
+        }.trim()
     }
 
     fun formatRoots(equation: QuadraticEquation): String {
